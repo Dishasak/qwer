@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Table</title>
+    <link rel="stylesheet" href="sheet.css">
+</head>
+<body>
+
+    <center>
+        <h1>Message data</h1>
+        <form>
+            <label for="message">Message Name:</label>
+            <input type="text" id="message" name="message" required oninput="updateWordCount()"><br><br>
+
+            <label for="messageType">Message Type:</label>
+            <select id="messageType" name="messageType">
+                <option value="RT-BC">RT-BC</option>
+                <option value="RT-RT">RT-RT</option>
+                <option value="BC-RT">BC-RT</option>
+            </select><br><br>
+
+            <label for="messageFrequency">Message Frequency:</label>
+            <select id="messageFrequency" name="messageFrequency">
+                <option value="20ms">20ms</option>
+                <option value="40ms">40ms</option>
+                <option value="80ms">80ms</option>
+            </select><br><br>
+
+            <div>
+                Word Count: <span id="wordCount">0</span>
+            </div>
+
+            <input type="hidden" id="editIndex" value="">
+            <input type="button" name="button" id="btn" value="Add" onclick="AddRow()">
+        </form>
+
+        <table border="4" id="show">
+            <thead>
+                <tr>
+                    <th>Message name</th>
+                    <th>Message type</th>
+                    <th>Message Frequency</th>
+                    <th>Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </center>
+
+    <script>
+        var list1 = [];
+        var list2 = [];
+        var list3 = [];
+
+        var n = 1;
+        var x = 0;
+
+        function AddRow() {
+            var messageName = document.getElementById("message").value;
+            var messageType = document.getElementById("messageType").value;
+            var messageFrequency = document.getElementById("messageFrequency").value;
+
+            if (document.getElementById("editIndex").value === "") {
+                list1[x] = messageName;
+                list2[x] = messageType;
+                list3[x] = messageFrequency;
+                x++;
+            } else {
+                var editIndex = parseInt(document.getElementById("editIndex").value);
+                list1[editIndex] = messageName;
+                list2[editIndex] = messageType;
+                list3[editIndex] = messageFrequency;
+                document.getElementById("editIndex").value = "";
+            }
+
+            UpdateTable();
+            ClearForm();
+        }
+
+        function UpdateTable() {
+            var table = document.getElementById("show").getElementsByTagName('tbody')[0];
+            table.innerHTML = "";
+
+            for (var i = 0; i < list1.length; i++) {
+                var newRow = table.insertRow(table.length);
+                var cel1 = newRow.insertCell(0);
+                var cel2 = newRow.insertCell(1);
+                var cel3 = newRow.insertCell(2);
+                var cel4 = newRow.insertCell(3);
+
+                cel1.innerHTML = list1[i];
+                cel2.innerHTML = list2[i];
+                cel3.innerHTML = list3[i];
+                cel4.innerHTML = '<button onclick="EditRow(' + i + ')">Edit</button>';
+            }
+        }
+
+        function EditRow(index) {
+            document.getElementById("message").value = list1[index];
+            document.getElementById("messageType").value = list2[index];
+            document.getElementById("messageFrequency").value = list3[index];
+            document.getElementById("editIndex").value = index;
+        }
+
+        function ClearForm() {
+            // Comment out the following lines to prevent clearing the form fields
+            // document.getElementById("message").value = "";
+            // document.getElementById("messageType").value = "RT-BC";
+            // document.getElementById("messageFrequency").value = "20ms";
+        }
+
+        function updateWordCount() {
+            var message = document.getElementById("message").value;
+            var wordCount = message.trim().split(/\s+/).filter(Boolean).length;
+            document.getElementById("wordCount").textContent = wordCount;
+        }
+    </script>
+</body>
+</html>
